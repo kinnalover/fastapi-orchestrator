@@ -32,10 +32,10 @@ class Process(OrmBase, ProcessBase):
 class MachineBase(BaseModel):
     name: str
     ip_address: str
-    status: Optional[str]
+    status: Optional[str | None]
 
 class MachineCreate(MachineBase):
-    pass
+    ...
 
 class MachineUpdate(MachineBase):
     pass
@@ -47,7 +47,7 @@ class Machine(OrmBase, MachineBase):
 class JobBase(BaseModel):
     process_id: uuid.UUID
     machine_id: uuid.UUID
-    status: Optional[str] = "pending"
+    status: Optional[str]
 
 class JobCreate(JobBase):
     pass
@@ -58,6 +58,20 @@ class JobUpdate(JobBase):
 class Job(OrmBase, JobBase):
     pass
 
+class TriggerBase(BaseModel):
+    process_id: uuid.UUID
+    machine_id: uuid.UUID
+
+class TriggerCreate(TriggerBase):
+    schedule_type: Optional[str]
+    selected_days: Optional[list]
+    time: Optional[str]
+
+class TriggerUpdate(TriggerBase):
+    pass
+
+class Trigger(OrmBase, TriggerBase):
+    pass
 # Task schemas
 class TaskDefinitionBase(BaseModel):
     name: str

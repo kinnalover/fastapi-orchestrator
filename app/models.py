@@ -133,8 +133,18 @@ class AgentHeartbeat(Base):
 
 # Replace the connection string with your database configuration
 
-
-
+class Trigger(Base):
+    __tablename__ = "triggers"
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    job_id = Column(UUID(as_uuid=True), ForeignKey('jobs.id'), nullable=True)
+    process_id = Column(UUID(as_uuid=True), ForeignKey('processes.id'), nullable=False)
+    machine_id = Column(UUID(as_uuid=True), ForeignKey('machines.id'), nullable=False)
+    schedule_type =  Column(String, nullable=False)
+    selected_days =Column(String, nullable=True)
+    schedule_time = Column(String, nullable=False)
+    celery_task_id = Column(String, nullable=True)  # Store Celery task ID
+    created_at = Column(DateTime, default=datetime.now())
+    updated_at = Column(DateTime, default=datetime.now(), onupdate=datetime.now())
 
 engine = create_engine(config.SQLALCHEMY_DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

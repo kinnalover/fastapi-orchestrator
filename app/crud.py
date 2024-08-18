@@ -2,7 +2,7 @@ import uuid
 
 from sqlalchemy.orm import Session
 from . import models, schemas
-
+import datetime
 # Process CRUD operations
 def get_process(db: Session, process_id: int):
     return db.query(models.Process).filter(models.Process.id == process_id).first()
@@ -73,6 +73,7 @@ def get_jobs(db: Session, skip: int = 0, limit: int = 10):
 
 def create_job(db: Session, job: schemas.JobCreate):
     db_job = models.Job(**job.dict())
+    db_job.start_time= datetime.datetime.now()
     db.add(db_job)
     db.commit()
     db.refresh(db_job)

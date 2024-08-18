@@ -9,6 +9,7 @@ router = APIRouter()
 
 @router.post("/", response_model=schemas.Job)
 def create_job(job: schemas.JobCreate, db: Session = Depends(get_db)):
+    print(f"create a job {job.__dict__}")
     return crud.create_job(db=db, job=job)
 
 @router.get("/{job_id}", response_model=schemas.Job)
