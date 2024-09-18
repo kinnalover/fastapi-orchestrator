@@ -3,7 +3,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 from app import config
-
+from contextlib  import contextmanager
 # SQLALCHEMY_DATABASE_URL can be set to any database supported by SQLAlchemy.
 # Examples:
 # SQLALCHEMY_DATABASE_URL = "sqlite:///./sql_app.db"  # For SQLite
@@ -23,6 +23,14 @@ Base = declarative_base()
 
 # Dependency to get a SQLAlchemy session
 def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+@contextmanager
+def get_db_2():
     db = SessionLocal()
     try:
         yield db

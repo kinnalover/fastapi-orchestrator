@@ -12,7 +12,7 @@ class OrmBase(BaseModel):
     updated_at: Optional[datetime]
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 # Process schemas
 class ProcessBase(BaseModel):
@@ -41,7 +41,7 @@ class MachineUpdate(MachineBase):
     pass
 
 class Machine(OrmBase, MachineBase):
-    pass
+    last_heartbeat: Optional[datetime | None]
 
 # Job schemas
 class JobBase(BaseModel):
@@ -55,8 +55,17 @@ class JobCreate(JobBase):
 class JobUpdate(JobBase):
     pass
 
+class JobUpdateById(BaseModel):
+    job_id: str
+    status: str
+
+class JobLogs(BaseModel):
+    job_id: str
+
 class Job(OrmBase, JobBase):
-    pass
+    start_time: Optional[datetime | None]
+    end_time: Optional[datetime | None]
+
 
 class TriggerBase(BaseModel):
     process_id: uuid.UUID

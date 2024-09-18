@@ -5,7 +5,7 @@ from datetime import datetime
 import uuid
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-
+from sqlalchemy import orm
 from app import config
 
 Base = declarative_base()
@@ -51,6 +51,7 @@ class Job(Base):
     log = Column(Text)
     created_at = Column(DateTime, default=datetime.now())
     updated_at = Column(DateTime, default=datetime.now(), onupdate=datetime.now())
+    comment = Column(Text)
     machine = relationship('Machine', back_populates='jobs')
     process = relationship('Process')
     task_executions = relationship('TaskExecution', back_populates='job')
@@ -151,3 +152,20 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 # Create all tables
 Base.metadata.create_all(bind=engine)
+
+class RPALog(Base):
+    __tablename__ = 'rpa_log'
+    id: orm.Mapped[int] = orm.mapped_column(primary_key=True)
+    asctime: orm.Mapped[datetime]
+    filename: orm.Mapped[str]
+    funcname: orm.Mapped[str]
+    levelname: orm.Mapped[str]
+    lineno: orm.Mapped[int]
+    message: orm.Mapped[str]
+    module: orm.Mapped[str]
+    name: orm.Mapped[str]
+    pathname: orm.Mapped[str]
+    process: orm.Mapped[str]
+    processname: orm.Mapped[str]
+    thread: orm.Mapped[int]
+    threadname: orm.Mapped[str]
