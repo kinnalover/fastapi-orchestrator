@@ -41,26 +41,26 @@ def run_background_worker(loop):
         print("Starting job check")
         with get_db_2() as db:
             pending_jobs = db.query(Job).filter(Job.status == 'pending').all()
+            if len(pending_jobs)>0:
+                for job in pending_jobs:
+                    print(job.__dict__)
+                    machine = db.query(Machine).filter(Machine.id == job.machine_id).first()
+                    process = db.query(Process).filter(Process.id == job.process_id).first()
 
-            for job in pending_jobs:
-                print(job.__dict__)
-                machine = db.query(Machine).filter(Machine.id == job.machine_id).first()
-                process = db.query(Process).filter(Process.id == job.process_id).first()
+                    if not machine:
+                        print("No such machine")
+                        continue
 
-                if not machine:
-                    print("No such machine")
-                    continue
-
-                print('Active connection present')
-                msg = {
-                    "type": "run_process",
-                    "machine_id": machine.ip_address,
-                    "gitlab_repo": process.repository_url,
-                    "job_id": str(job.id),
-                    "timestamp": int(time.time())
-                }
-                # Pass message to the asyncio queue
-                asyncio.run_coroutine_threadsafe(message_queue.put((json.dumps(msg), machine.ip_address)), loop)
+                    print('Active connection present')
+                    msg = {
+                        "type": "run_process",
+                        "machine_id": machine.ip_address,
+                        "gitlab_repo": process.repository_url,
+                        "job_id": str(job.id),
+                        "timestamp": int(time.time())
+                    }
+                    # Pass message to the asyncio queue
+                    asyncio.run_coroutine_threadsafe(message_queue.put((json.dumps(msg), machine.ip_address)), loop)
 
         print("Sleeping for 20 seconds")
         time.sleep(20)

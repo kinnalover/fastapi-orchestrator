@@ -18,9 +18,11 @@ class Process(Base):
     name = Column(String(255), nullable=False)
     description = Column(Text)
     repository_url = Column(String(255))
+    folderPath = Column(String(255))
     created_at = Column(DateTime, default=datetime.now())
     updated_at = Column(DateTime, default=datetime.now(), onupdate=datetime.now())
-
+    default_machine = Column(Text)
+    default_machines = Column(Text)
     tasks = relationship('TaskDefinition', back_populates='process')
 
 

@@ -50,3 +50,7 @@ def update_job(job_id: str, job: schemas.JobUpdate, db: Session = Depends(get_db
 def delete_job(job_id: str, db: Session = Depends(get_db)):
     crud.delete_job(db, job_id=job_id)
     return {"detail": "Job deleted"}
+
+@router.post("/stop_job/{job_id}",response_model=schemas.Job)
+def stop_the_job(job_id: str, db: Session = Depends(get_db)):
+    ...

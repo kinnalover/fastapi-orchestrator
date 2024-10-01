@@ -19,8 +19,10 @@ class ProcessBase(BaseModel):
     name: str
     description: Optional[str]
     repository_url: Optional[str]
+    folderPath: Optional[str]
 class ProcessCreate(ProcessBase):
-    pass
+    default_machine: Optional[str]
+    default_machines: Optional[str]
 
 class ProcessUpdate(ProcessBase):
     pass

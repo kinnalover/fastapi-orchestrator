@@ -75,9 +75,12 @@ async def websocket_endpoint(websocket: WebSocket, client_id: str):
 
             await manager.send_personal_message(data, client_id)
             # await manager.broadcast(f"Client #{client_id} says: {data}")
-    except WebSocketDisconnect:
+    except WebSocketDisconnect as exwd:
         manager.disconnect(client_id)
-        await manager.broadcast(f"Client #{client_id} left the chat")
+        await manager.broadcast(f"Client #{client_id} left the chat: {exwd}")
+    except Exception as ex:
+        manager.disconnect(client_id)
+        print(f"Exception:{ex}")
 
 
 @router.websocket("/logs/{job_id}")
